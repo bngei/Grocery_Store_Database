@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Admin Home Page</title>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles.css')}}">
+    </head>
+
+    <body>
+        <header>
+            <h1>
+                <center>Grocery Store</center>
+            </h1>
+            <nav>
+                <ul>
+                    <li><a href="admin_home_page.html">Home</a></li>
+                    <li><a href= "{{url_for('login')}}">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <h2><center>Hello Admin</center></h2>
+    </body>
+</html>
