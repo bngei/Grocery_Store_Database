@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Delete Manager</title>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles.css')}}">
+    </head>
+
+    <body>
+        <header>
+            <h1>
+                <center>Delete Manager</center>
+            </h1>
+            <nav>
+                <ul>
+                    <li><a href="{{url_for('admin_home')}}">Home</a></li>
+                    <li><a href="{{url_for('admin_create_manager')}}">Create Manager</a></li>
+                    <li><a href="{{url_for('admin_create_employee')}}">Create Employee</a></li>
+                    <li><a href="{{url_for('admin_delete_manager')}}">Delete Manager</a></li>
+                    <li><a href="{{url_for('admin_delete_employee')}}">Delete Employee</a></li>
+                    <li><a href="{{url_for('login')}}">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+    </body>
+</html>

@@ -27,6 +27,7 @@ def login():
 
 
         try:
+            # check to see if the username and password are in the database
             myCursor.execute("SELECT * FROM grocery_store.user WHERE username = %s AND password = %s", (username, password))
             user = myCursor.fetchone()
             myConnection.commit()
@@ -35,18 +36,18 @@ def login():
 
 
         if user:
+            session['user_ID'] = user[0]
             if user[3] == 'admin':
-                return redirect(url_for('admin_home_page'))
+                return redirect(url_for('admin_home', user_ID=user[0]))
             elif user[3] == 'manager':
-                return redirect(url_for('manager_home_page'))
+                return redirect(url_for('manager_home', user_ID=user[0]))
             elif user[3] == 'employee':
-                return redirect(url_for('employee_home_page'))
+                return redirect(url_for('employee_home', user_ID=user[0]))
             elif user[3] == 'customer':
-                return redirect(url_for('customer_home_page'))
+                return redirect(url_for('customer_home', user_ID=user[0]))
         else:
             flash('Invalid username or password')
             return render_template('login.html')
-        return render_template('admin_home_page.html')
     else:
         return render_template('login.html')
     
@@ -100,11 +101,11 @@ def customer_form():
         # changing the date format
         new_date_of_birth = date_of_birth[-4:] + "-" + date_of_birth[0:2] + "-" + date_of_birth[3:5]
 
-        # getting userID 
+        # getting user_ID 
         try:
             myCursor.execute("SELECT * FROM grocery_store.user ORDER BY user_ID DESC");
             users = myCursor.fetchall()
-            userID = users[0][0]
+            user_ID = users[0][0]
             myConnection.commit()
         except Exception as error:
             print("An error occurred while executing the FIRST query: ", error)
@@ -128,9 +129,9 @@ def customer_form():
             myConnection.commit()
 
             # # inserting customer into the database
-            # myCursor.execute("INSERT INTO grocery_store.customer (user_ID, personal_information_ID)", (userID, PID))
+            # myCursor.execute("INSERT INTO grocery_store.customer (user_ID, personal_information_ID)", (user_ID, PID))
 
-            return redirect(url_for('customer_home_page'))
+            return redirect(url_for('customer_home'))
         except Exception as error:
             print("An error occurred while executing the query: ", error)
             
@@ -141,28 +142,48 @@ def customer_form():
 
 @app.route("/logout", methods=['POST', 'GET'])
 def logout():
+    session.clear()
     return render_template('login.html')
 
 
-@app.route("/customer_home_page", methods=['POST', 'GET'])
-def customer_home_page():
-    return render_template('customer_home_page.html')
+@app.route("/customer_home", methods=['POST', 'GET'])
+def customer_home():
+    user_ID = session['user_ID']
+    return render_template('customer_home.html', user_ID=user_ID)
 
 
-@app.route("/employee_home_page", methods=['POST', 'GET'])
-def employee_home_page():
-    return render_template('employee_home_page.html')
+@app.route("/employee_home", methods=['POST', 'GET'])
+def employee_home():
+    return render_template('employee_home.html')
 
 
-@app.route("/manager_home_page", methods=['POST', 'GET'])
-def manager_home_page():
-    return render_template('manager_home_page.html')
+@app.route("/manager_home", methods=['POST', 'GET'])
+def manager_home():
+    return render_template('manager_home.html')
 
 
-@app.route("/admin_home_page", methods=['POST', 'GET'])
-def admin_home_page():
-    return render_template('admin_home_page.html')
+@app.route("/admin_home", methods=['POST', 'GET'])
+def admin_home():
+    return render_template('admin_home.html')
 
+
+@app.route("/admin_create_manager", methods=['POST', 'GET'])
+def admin_create_manager():
+    return render_template('admin_create_manager.html')
+
+
+@app.route("/admin_create_employee", methods=['POST', 'GET'])
+def admin_create_employee():
+    return render_template('admin_create_employee.html')
+
+
+@app.route("/admin_delete_manager", methods=['POST', 'GET'])
+def admin_delete_manager():
+    return render_template('admin_delete_manager.html')
+
+@app.route("/admin_delete_employee", methods=['POST', 'GET'])
+def admin_delete_employee():
+    return render_template('admin_delete_employee.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
