@@ -16,7 +16,7 @@ except Exception as error:
 
 @app.route("/")
 def index():
-    return render_template('login.html')
+    return render_template('admin_create_manager.html')
 
 
 @app.route("/login", methods=['POST', 'GET'])
@@ -108,7 +108,7 @@ def customer_form():
             user_ID = users[0][0]
             myConnection.commit()
         except Exception as error:
-            print("An error occurred while executing the FIRST query: ", error)
+            print("An error occurred while executing the query: ", error)
 
 
         try:
@@ -169,6 +169,76 @@ def admin_home():
 
 @app.route("/admin_create_manager", methods=['POST', 'GET'])
 def admin_create_manager():
+    if request.method == 'POST':
+        # gather information 
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['name']
+        date_of_birth = request.form['date_of_birth']
+        phone_number = request.form['phone_number']
+        street_address = request.form['street_address']
+        city = request.form['city']
+        state = request.form['state']
+        zip_code = request.form['zip_code']
+        int_zip_code = int(zip_code)
+        wage = request.form['wage']
+
+        # changing the date format
+        new_date_of_birth = date_of_birth[-4:] + "-" + date_of_birth[0:2] + "-" + date_of_birth[3:5]
+
+        # creating user
+        try:
+            myCursor.execute("INSERT INTO grocery_store.user (username, password, role) VALUES (%s, %s, 'manager')", (username, password))
+            myConnection.commit()
+        except Exception as error:
+            print("An error occurred while executing the user query: ", error)
+
+        # getting user_ID
+        try:
+            myCursor.execute("SELECT * FROM grocery_store.user ORDER BY user_ID DESC");
+            users = myCursor.fetchall()
+            user_ID = users[0][0]
+            myConnection.commit()
+        except Exception as error:
+            print("An error occurred while executing the userID query: ", error)
+
+        # creating address
+        try:
+            myCursor.execute("INSERT INTO grocery_store.address (street_address, city, state, zip) VALUES (%s, %s, %s, %s)", (street_address, city, state, int_zip_code))
+            myConnection.commit()
+        except Exception as error:
+            print("An error occurred while executing the address query: ", error)
+
+        # getting addressID
+        try:
+            myCursor.execute("SELECT * FROM grocery_store.address ORDER BY address_ID DESC");
+            addresses = myCursor.fetchall()
+            addressID = addresses[0][0]
+            myConnection.commit()
+        except Exception as error:
+            print("An error occurred while executing the addressID query: ", error)
+
+        # creating personal information
+        try:
+            myCursor.execute("INSERT INTO grocery_store.personal_information (address_ID, name, DOB, phone_number) VALUES (%s, %s, %s, %s)", (addressID, name, new_date_of_birth, phone_number))
+            myConnection.commit()
+        except Exception as error:
+            print("An error occurred while executing the personal information query: ", error)
+
+        # creating a schedule # FIX THIS
+        try:
+            myCursor.execute("INSERT INTO grocery_store.schedule (time) VALUES (%s)", (0))
+            myConnection.commit()
+        except Exception as error:
+            print("An error occurred while executing the schedule query: ", error)
+
+        # creating an employee
+        try:
+            myCursor.execute("INSERT INTO grocery_store.employee (user_ID, personal_information_ID, schedule_ID, wage, title) VALUES (%s, %s, %s, %s)", (user_ID, addressID, 0, wage, 'manager'))
+            myConnection.commit()
+        except Exception as error:
+            print("An error occurred while executing the employee query: ", error)
+
     return render_template('admin_create_manager.html')
 
 
