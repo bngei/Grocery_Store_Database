@@ -225,16 +225,34 @@ def admin_create_manager():
         except Exception as error:
             print("An error occurred while executing the personal information query: ", error)
 
-        # creating a schedule # FIX THIS
+        # getting personal_information_ID
+        try:
+            myCursor.execute("SELECT * FROM grocery_store.personal_information ORDER BY personal_information_ID DESC");
+            personal_information = myCursor.fetchall()
+            personal_information_ID = personal_information[0][0]
+            myConnection.commit()
+        except Exception as error:
+            print("An error occurred while executing the personal_information_ID query: ", error)
+
+        # creating a schedule
         try:
             myCursor.execute("INSERT INTO grocery_store.schedule (time) VALUES (%s)", (0))
             myConnection.commit()
         except Exception as error:
             print("An error occurred while executing the schedule query: ", error)
 
+        # getting schedule_ID
+        try:
+            myCursor.execute("SELECT * FROM grocery_store.schedule ORDER BY schedule_ID DESC");
+            schedules = myCursor.fetchall()
+            schedule_ID = schedules[0][0]
+            myConnection.commit()
+        except Exception as error:
+            print("An error occurred while executing the scheduleID query: ", error)
+
         # creating an employee
         try:
-            myCursor.execute("INSERT INTO grocery_store.employee (user_ID, personal_information_ID, schedule_ID, wage, title) VALUES (%s, %s, %s, %s)", (user_ID, addressID, 0, wage, 'manager'))
+            myCursor.execute("INSERT INTO grocery_store.employee (user_ID, personal_information_ID, schedule_ID, wage, title) VALUES (%s, %s, %s, %s)", (user_ID, personal_information_ID, schedule_ID, wage, 'manager'))
             myConnection.commit()
         except Exception as error:
             print("An error occurred while executing the employee query: ", error)
