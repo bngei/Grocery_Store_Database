@@ -236,7 +236,7 @@ def admin_create_manager():
 
         # creating a schedule
         try:
-            myCursor.execute("INSERT INTO grocery_store.schedule (time) VALUES (%s)", (0))
+            myCursor.execute("INSERT INTO grocery_store.schedule (time) VALUES (%s)", (0,))
             myConnection.commit()
         except Exception as error:
             print("An error occurred while executing the schedule query: ", error)
@@ -252,7 +252,7 @@ def admin_create_manager():
 
         # creating an employee
         try:
-            myCursor.execute("INSERT INTO grocery_store.employee (user_ID, personal_information_ID, schedule_ID, wage, title) VALUES (%s, %s, %s, %s)", (user_ID, personal_information_ID, schedule_ID, wage, 'manager'))
+            myCursor.execute("INSERT INTO grocery_store.employee (user_ID, personal_information_ID, schedule_ID, wage, title) VALUES (%s, %s, %s, %s, %s)", (user_ID, personal_information_ID, schedule_ID, wage, 'manager'))
             myConnection.commit()
         except Exception as error:
             print("An error occurred while executing the employee query: ", error)

@@ -41,3 +41,22 @@ li a {
 li a:hover {
   background-color: #111;
 }
+/* 
+
+.popupContainer {
+  position: relative;
+  justify-content: center;
+  width: 400px;
+  height: 200px;
+  border-radius: 10px;
+  background: #000000;
+  padding: 20px 20px 20px;
+  position: absolute;
+  font-size: 30px;
+  color: #fbf1c7;
+  display: block;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+} */
